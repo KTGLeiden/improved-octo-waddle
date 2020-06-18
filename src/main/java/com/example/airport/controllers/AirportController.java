@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/airports")
 public class AirportController {
 
@@ -38,11 +39,19 @@ public class AirportController {
     }
 
     @PostMapping
-    public void create(@Valid @RequestBody Airport airport) {
+    public Airport create(@Valid @RequestBody Airport airport) {
         if(airport.getId() != null) {
             throw new BadRequestException();
         }
-        airportRepository.save(airport);
+        return airportRepository.save(airport);
+    }
+
+    @PutMapping
+    public Airport update(@RequestBody Airport airport) {
+        if(airport.getId() == null) {
+            throw new BadRequestException();
+        }
+        return airportRepository.save(airport);
     }
 
 }
