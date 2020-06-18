@@ -5,8 +5,6 @@ name: "pre-release"
 
 on:
   push:
-    branches:
-      - "master"
     tags:
       - v*
 
