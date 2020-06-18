@@ -33,12 +33,12 @@ jobs:
           java-version: 1.8
       - name: Build with Maven
         # For some reason, we need to add the execution rights to the mvnw executable first.
-        run: chmod +x mvnw && ./mvnw -Pprod package && echo "${{ jobs.bump_version.outputs.new_tag }}"
+        run: chmod +x mvnw && ./mvnw -Pprod package && echo "${{ steps.bump_version.outputs.new_tag }}"
         
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ jobs.bump_version.outputs.new_tag }}"
+          automatic_release_tag: "${{ steps.bump_version.outputs.new_tag }}"
           prerelease: true
           title: "Development Build"
           files: |
