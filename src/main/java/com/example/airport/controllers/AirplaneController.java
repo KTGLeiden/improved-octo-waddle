@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/airplanes")
 public class AirplaneController {
 
@@ -26,16 +27,32 @@ public class AirplaneController {
         return airplaneRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Airplane index(@PathVariable Long id) {
+        return airplaneRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
     @PostMapping
-    public void save(@RequestBody Airplane airplane) {
-        airplaneRepository.save(airplane);
+    public Airplane save(@RequestBody Airplane airplane) {
+        if(airplane.getId() != null) {
+            throw new BadRequestException("You cannot save an airplane which already has an id!");
+        }
+        return airplaneRepository.save(airplane);
+    }
+
+    @PutMapping
+    public Airplane update(@RequestBody Airplane airplane) {
+        if(airplane.getId() == null) {
+            throw new BadRequestException();
+        }
+        return airplaneRepository.save(airplane);
     }
 
     @PutMapping("/refuel/{id}")
-    public void refuel(@PathVariable Long id) {
+    public Airplane refuel(@PathVariable Long id) {
         Airplane airplane = airplaneRepository.findById(id).orElseThrow(NotFoundException::new);
         airplane.setTonsOfFuel(5);
-        airplaneRepository.save(airplane);
+        return airplaneRepository.save(airplane);
     }
 
     @PutMapping("/move/{id}/{destinationId}")
